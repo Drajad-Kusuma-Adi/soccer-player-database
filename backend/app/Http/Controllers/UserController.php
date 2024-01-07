@@ -49,11 +49,7 @@ class UserController extends Controller
     }
     public function logout(Request $request)
     {
-        $validation = $request->validate([
-            'token' => 'required'
-        ]);
-
-        $user = Users::where('remember_token', $request->token)->first();
+        $user = Users::where('remember_token', $request->bearerToken())->first();
         if (!$user) {
             return response()->json([
                 'status' => 'error',
@@ -66,17 +62,17 @@ class UserController extends Controller
             ], 200);
         }
     }
-    public function getAllUsers(Request $request) {
+    public function getAllUsers(Request $request)
+    {
         $validation = $request->validate([
             'token' => 'required'
-        ])
-
-        $user = Users::where('remember_token', $request->token)->first();
+        ]);
+        $user = Users::where('remember_token', $request->bearerToken())->first();
         if (!$user) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid token'
-            ], 401); 
+            ], 401);
         } else {
             $users = Users::all();
             if (!$users) {
@@ -91,10 +87,11 @@ class UserController extends Controller
             ], 200);
         }
     }
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $validation = $request->validate([
-          'username' => 'required|string|min:4',
-          'password' => 'required|string|min:8'
+            'username' => 'required|string|min:4',
+            'password' => 'required|string|min:8'
         ]);
 
         $user = Users::where('username', $request->username)->first();
@@ -120,94 +117,97 @@ class UserController extends Controller
             ], 200);
         }
     }
-    public function getUserById(Request $request) {
-      $validation = $request->validate([
-        'token' => 'required',
-        'id' => 'required'
-      ]);
+    public function getUserById(Request $request, $id)
+    {
+        $validation = $request->validate([
+            'token' => 'required',
+            'id' => 'required'
+        ]);
 
-      $token = Users::where('remember_token', $request->token)->first();
-      if (!$token) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Invalid token'
-        ], 401);
-      } else {
-        $user = Users::where('id', $request->id)->first();
-        if (!$user) {
-          return response()->json([
-              'status' => 'error',
-              'message' => 'Error at getting user'
-          ], 500);
-        }
-        return response()->json([
-          'status' => 'success',
-          'user' => $user
-        ], 200);
-      }
-    }
-    public function modifyUserById(Request $request) {
-      $validation = $request->validate([
-        'token' => 'required',
-        'id' => 'required',
-        'username' => 'required',
-      ]);
-
-      $token = Users::where('remember_token', $request->token)->first();
-      if (!$token) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Invalid token'
-        ], 401);
-      } else {
-        $user = Users::where('id', $request->id)->first();
-        if (!$user) {
-          return response()->json([
-              'status' => 'error',
-              'message' => 'Error at getting user'
-          ], 500);
-        } else {
-            $update = Users::where('id', $request->id)->update([
-            'username' => $request->username
-          ]);
-          if (!$update) {
+        $token = Users::where('remember_token', $request->bearerToken())->first();
+        if (!$token) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Error at updating user'
-            ], 500);
-          }
-          return response()->json([
-            'status' => 'success',
-            'message' => 'Update successful'
-            'new_user' => $update
-          ], 200);
+                'message' => 'Invalid token'
+            ], 401);
+        } else {
+            $user = Users::where('id', $request->id)->first();
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error at getting user'
+                ], 500);
+            }
+            return response()->json([
+                'status' => 'success',
+                'user' => $user
+            ], 200);
         }
-      }
     }
-    public function deleteUserById(Request $request) {
-      $validatin = $request->validate([
-        'token' => 'required',
-        'id' => 'required'
-      ]);
+    public function modifyUserById(Request $request, $id)
+    {
+        $validation = $request->validate([
+            'token' => 'required',
+            'id' => 'required',
+            'username' => 'required',
+        ]);
 
-      $user = Users::where('remember_token', $request->token)->first();
-      if (!$user) {
-        return response()->json([
-          'status' => 'error',
-          'message' => 'Invalid token'
-        ], 401);    
-      } else {
-        $delete = Users::where('id', $request->id)->delete();
-        if (!$delete) {
-          return response()->json([
-            'status' => 'error',
-            'message' => 'Error at deleting user'
-          ], 500);
+        $token = Users::where('remember_token', $request->bearerToken())->first();
+        if (!$token) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid token'
+            ], 401);
+        } else {
+            $user = Users::where('id', $request->id)->first();
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error at getting user'
+                ], 500);
+            } else {
+                $update = Users::where('id', $request->id)->update([
+                    'username' => $request->username
+                ]);
+                if (!$update) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Error at updating user'
+                    ], 500);
+                }
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Update successful',
+                    'new_user' => $update
+                ], 200);
+            }
         }
-        return response()->json([
-          'status' => 'success',
-          'message' => 'Delete successful'
-        ], 200);
-      }
+    }
+    public function deleteUserById(Request $request, $id)
+    {
+        $validatin = $request->validate([
+            'token' => 'required',
+            'id' => 'required'
+        ]);
+
+        $user = Users::where('remember_token', $request->bearerToken())->first();
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid token'
+            ], 401);
+        } else {
+            $delete = Users::where('id', $request->id)->delete();
+            if (!$delete) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error at deleting user'
+                ], 500);
+            }
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Delete successful'
+            ], 200);
+        }
     }
 }
