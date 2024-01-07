@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Users::factory(30)->create();
         \App\Models\Players::factory(60)->create();
+        \App\Models\Proposals::factory(45)->create();
     }
 }

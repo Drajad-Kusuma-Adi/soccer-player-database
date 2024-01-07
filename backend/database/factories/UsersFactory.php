@@ -20,6 +20,7 @@ class UsersFactory extends Factory
         return [
             'username' => fake()->name(),
             'password' => Hash::make('password'),
+            'isAdmin' => fake()->numberBetween(0, 1)
         ];
     }
 }

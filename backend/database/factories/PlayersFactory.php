@@ -20,8 +20,8 @@ class PlayersFactory extends Factory
             'position' => fake()->word(),
             'name' => fake()->name(),
             'back_number' => fake()->numberBetween(1, 11),
-            'createdBy' => fake()->numberBetween(1, 30),
-            'modifiedBy' => fake()->numberBetween(1, 30)
+            'created_by' => fake()->numberBetween(1, 30),
+            'modified_by' => fake()->numberBetween(1, 30)
         ];
     }
 }

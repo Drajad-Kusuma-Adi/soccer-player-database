@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('position');
             $table->string('name');
             $table->integer('back_number');
-            $table->integer('createdBy');
-            $table->integer('modifiedBy');
+            $table->integer('created_by');
+            $table->integer('modified_by');
             $table->timestamps();
         });
     }

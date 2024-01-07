@@ -5,17 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Players extends Model
+class Proposals extends Model
 {
     use HasFactory;
 
-    protected $table = 'players';
+    protected $table = 'proposals';
 
     protected $fillable = [
         'position',
         'name',
         'back_number',
         'created_by',
-        'modified_by',
+        'processed_by',
+        'description',
+        'status'
     ];
 }

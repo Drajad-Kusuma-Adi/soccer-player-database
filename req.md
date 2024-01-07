@@ -6,7 +6,9 @@ users
 - password
 - createdDate
 - modifiedDate
-  players
+
+players
+
 - id
 - posisi
 - nama
